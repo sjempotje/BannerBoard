@@ -1,0 +1,33 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+}
+
+allprojects {
+    apply plugin: 'java-library'
+
+    group 'nl.sandergielisse'
+
+    repositories {
+        mavenCentral()
+        maven { url = "https://repo.codemc.io/repository/nms/" }
+        maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+        maven { url = "https://mvn.intellectualsites.com/content/repositories/thirdparty/" }
+        maven { url = "https://repo.glaremasters.me/repository/public/" }
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot:1.17-R0.1-SNAPSHOT"
+    compileOnly "io.netty:netty-all:4.0.23.Final"
+    compileOnly "me.clip:placeholderapi:2.10.9"
+
+    implementation project("api")
+}
+
+shadowJar {
+    archiveFileName = "BannerBoard.jar"
+}
+
+processResources {
+    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: version]
+}

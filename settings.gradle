@@ -1,0 +1,2 @@
+rootProject.name = 'BannerBoard-free'
+include 'api'

@@ -2,9 +2,12 @@ package me.bigteddy98.bannerboard;
 
 import me.bigteddy98.bannerboard.util.VersionUtil;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.level.saveddata.maps.WorldMap;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -62,7 +65,9 @@ public class Mapping {
             }
 
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                worldMapMethod = PacketManager.getNewNMS("net.minecraft.world.level.saveddata.maps.WorldMap").getMethod("a");
+                final MethodHandles.Lookup lookup = MethodHandles.lookup();
+                final Class<?> clazz = lookup.findClass("net.minecraft.world.level.saveddata.maps.WorldMap");
+                worldMapMethod = clazz.getMethod("a", Byte.TYPE, Boolean.TYPE, ResourceKey.class);
             } else {
                 worldMapConstructor = PacketManager.getNMS("WorldMap").getConstructor(String.class);
             }
@@ -101,7 +106,8 @@ public class Mapping {
         try {
             Object worldMap;
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                worldMap = worldMapMethod.invoke(net.minecraft.world.level.saveddata.maps.WorldMap.class.getDeclaredConstructor(Byte.TYPE, Boolean.TYPE, ResourceKey.class).newInstance((byte) 4, false, getHandle.invoke(Bukkit.getServer().getWorlds().get(0))));
+                worldMapMethod.setAccessible(true);
+                worldMap = worldMapMethod.invoke(null, (byte) 4, false, WorldServer.g);
             } else {
                worldMap = worldMapConstructor.newInstance(name);
             }
@@ -139,7 +145,7 @@ public class Mapping {
                 }
             }
             return worldMap;
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }

@@ -101,14 +101,13 @@ public class Mapping {
         try {
             Object worldMap;
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                // todo figure this out
-          //      worldMap = worldMapMethod.invoke(net.minecraft.world.level.saveddata.maps.WorldMap.class.getDeclaredConstructor(Byte.TYPE, Boolean.TYPE, ResourceKey.class).newInstance((byte) 4, false, getHandle.invoke(Bukkit.getServer().getWorlds().get(0))));
+                worldMap = worldMapMethod.invoke(net.minecraft.world.level.saveddata.maps.WorldMap.class.getDeclaredConstructor(Byte.TYPE, Boolean.TYPE, ResourceKey.class).newInstance((byte) 4, false, getHandle.invoke(Bukkit.getServer().getWorlds().get(0))));
             } else {
                worldMap = worldMapConstructor.newInstance(name);
             }
 
             if (VersionUtil.isHigherThan("v1_13_R2")) {
-             //   mapField.set(worldMap, dimensionManager);
+                mapField.set(worldMap, dimensionManager);
             }
 
             if (VersionUtil.isHigherThan("v1_14_R1")) {
@@ -117,7 +116,7 @@ public class Mapping {
                 final Object worldServer = getHandle.invoke(Bukkit.getServer().getWorlds().get(0));
                 final Object worldPersistentData = getWorldPersistentData.invoke(worldServer);
                 @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) dataMapField.get(worldPersistentData);
-             //   map.put(name, worldMap);
+                map.put(name, worldMap);
 
 				/*
 				// create file so that this method actually registers

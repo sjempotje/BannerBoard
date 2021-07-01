@@ -2,8 +2,8 @@ package me.bigteddy98.bannerboard;
 
 import me.bigteddy98.bannerboard.util.VersionUtil;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.level.saveddata.maps.WorldMap;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -44,7 +44,9 @@ public class Mapping {
 
             if (VersionUtil.isHigherThan("v1_16_R3")) {
                 getWorldPersistentData = PacketManager.getNewNMS("net.minecraft.server.level.WorldServer").getMethod("getChunkProvider");
-                dataMapField = PacketManager.getNewNMS("net.minecraft.server.level.ChunkProviderServer").getDeclaredField("i");
+                final Field field = PacketManager.getNewNMS("net.minecraft.server.level.ChunkProviderServer").getDeclaredField("i");
+                field.setAccessible(true);
+                dataMapField = field;
             } else if (VersionUtil.isHigherThan("v1_14_R1")) {
                 // invoke getWorldPersistentData on WorldServer to obtain WorldPersistentData
                 getWorldPersistentData = PacketManager.getNMS("WorldServer").getMethod("getWorldPersistentData");
@@ -106,13 +108,12 @@ public class Mapping {
         try {
             Object worldMap;
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                worldMapMethod.setAccessible(true);
                 worldMap = worldMapMethod.invoke(null, (byte) 4, false, WorldServer.g);
             } else {
                worldMap = worldMapConstructor.newInstance(name);
             }
 
-            if (VersionUtil.isHigherThan("v1_13_R2")) {
+            if (VersionUtil.isHigherThan("v1_13_R2") && !VersionUtil.isHigherThan("v1_16_R3")) {
                 mapField.set(worldMap, dimensionManager);
             }
 
@@ -121,8 +122,11 @@ public class Mapping {
                 // invoke getWorldPersistentData on WorldServer to obtain WorldPersistentData
                 final Object worldServer = getHandle.invoke(Bukkit.getServer().getWorlds().get(0));
                 final Object worldPersistentData = getWorldPersistentData.invoke(worldServer);
-                @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) dataMapField.get(worldPersistentData);
-                map.put(name, worldMap);
+                //final Object actualData = dataMapField.get("i");
+
+                //@SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) actualData;
+
+                //map.put(name, worldMap);
 
 				/*
 				// create file so that this method actually registers

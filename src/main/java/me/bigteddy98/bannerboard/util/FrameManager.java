@@ -12,11 +12,11 @@ import java.lang.reflect.Method;
 
 public class FrameManager {
 
-    private static final Constructor<?> CREATE_FRAME;
-    private static final Constructor<?> BLOCK_POSITION;
+    private static Constructor<?> CREATE_FRAME;
+    private static Constructor<?> BLOCK_POSITION;
     private static final Method ADD_ENTITY;
     private static final Field FIELD_NMS_WORLD;
-    private static final Class<?> ENUM_DIRECTION;
+    private static Class<?> ENUM_DIRECTION;
 
     static {
         try {
@@ -24,14 +24,56 @@ public class FrameManager {
             FIELD_NMS_WORLD = craftWorld.getDeclaredField("world");
             FIELD_NMS_WORLD.setAccessible(true);
 
-            final Class<?> entity = PacketManager.getNMS("Entity");
+            final Class<?> entity;
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                entity = PacketManager.getNewNMS("net.minecraft.world.entity.Entity");
+            } else {
+                entity = PacketManager.getNMS("Entity");
+            }
+
             ADD_ENTITY = craftWorld.getDeclaredMethod("addEntity", entity, CreatureSpawnEvent.SpawnReason.class, Class.forName("org.bukkit.util.Consumer"));
 
-            final Class<?> world = PacketManager.getNMS("World");
-            final Class<?> blockPosition = PacketManager.getNMS("BlockPosition");
-            ENUM_DIRECTION = PacketManager.getNMS("EnumDirection");
-            CREATE_FRAME = PacketManager.getNMS("EntityItemFrame").getConstructor(world, blockPosition, ENUM_DIRECTION);
-            BLOCK_POSITION = PacketManager.getNMS("BlockPosition").getConstructor(Integer.TYPE, Integer.TYPE, Integer.TYPE);
+            final Class<?> world;
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                world = PacketManager.getNewNMS("net.minecraft.world.level.World");
+            } else {
+                world = PacketManager.getNMS("World");
+            }
+
+            final Class<?> blockPosition;
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                blockPosition = PacketManager.getNewNMS("net.minecraft.core.BlockPosition");
+            } else {
+                blockPosition = PacketManager.getNMS("BlockPosition");
+            }
+
+            ENUM_DIRECTION = null;
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                ENUM_DIRECTION = PacketManager.getNewNMS("net.minecraft.core.EnumDirection");
+            } else {
+                ENUM_DIRECTION = PacketManager.getNMS("EnumDirection");
+            }
+
+            CREATE_FRAME = null;
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                CREATE_FRAME = PacketManager.getNewNMS("net.minecraft.world.entity.decoration.EntityItemFrame").getConstructor(world, blockPosition, ENUM_DIRECTION);
+            } else {
+                CREATE_FRAME = PacketManager.getNMS("EntityItemFrame").getConstructor(world, blockPosition, ENUM_DIRECTION);
+            }
+
+
+            BLOCK_POSITION = null;
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                BLOCK_POSITION = PacketManager.getNewNMS("net.minecraft.core.BlockPosition").getConstructor(Integer.TYPE, Integer.TYPE, Integer.TYPE);
+            } else {
+                BLOCK_POSITION = PacketManager.getNMS("BlockPosition").getConstructor(Integer.TYPE, Integer.TYPE, Integer.TYPE);
+            }
 
         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
             e.printStackTrace();

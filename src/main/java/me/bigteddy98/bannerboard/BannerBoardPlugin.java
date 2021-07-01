@@ -318,6 +318,9 @@ public class BannerBoardPlugin extends JavaPlugin {
             if (VersionUtil.isHigherThan("v1_16_R1")) {
                 palette_name = "color_palette_v1_16_R1.bc";
             }
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                palette_name = "color_palette_v1_17_R1.bc";
+            }
             this.getConfig().set("color_palette", palette_name);
             this.saveConfig();
         }

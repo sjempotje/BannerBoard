@@ -40,8 +40,13 @@ public class BannerBoardInjector extends ChannelDuplexHandler {
             // has two fields
             if (VERSION.startsWith("v1_9_") || VersionUtil.isHigherThan("v1_10_R1")) {
                 // 1.9 related
-                itemList_19 = PacketManager.getNMS("DataWatcher$Item").getDeclaredField("b");
-                itemList_19.setAccessible(true);
+                if (VersionUtil.isHigherThan("v1_16_R3")) {
+                    itemList_19 = PacketManager.getNewNMS("net.minecraft.network.syncher.DataWatcher").getDeclaredField("f");
+                    itemList_19.setAccessible(true);
+                } else {
+                    itemList_19 = PacketManager.getNMS("DataWatcher$Item").getDeclaredField("b");
+                    itemList_19.setAccessible(true);
+                }
 
                 present_19 = Class.forName("com.google.common.base.Present");
                 getPresent_19 = Class.forName("com.google.common.base.Optional").getMethod("get");
@@ -60,27 +65,57 @@ public class BannerBoardInjector extends ChannelDuplexHandler {
             }
 
             // global
-            datawatcher = PacketManager.getNMS("PacketPlayOutEntityMetadata").getDeclaredField("b");
-            datawatcher.setAccessible(true);
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                datawatcher = PacketManager.getNewNMS("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata").getDeclaredField("b");
+                datawatcher.setAccessible(true);
+            } else {
+                datawatcher = PacketManager.getNMS("PacketPlayOutEntityMetadata").getDeclaredField("b");
+                datawatcher.setAccessible(true);
+            }
 
-            itemStack = PacketManager.getNMS("ItemStack");
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                itemStack = PacketManager.getNewNMS("net.minecraft.world.item.ItemStack");
+            } else {
+                itemStack = PacketManager.getNMS("ItemStack");
+            }
+
+
 
             if (VersionUtil.isHigherThan("v1_13_R1")) {
-                getDamage = PacketManager.getNMS("ItemStack").getMethod("getDamage");
-                damage = null;
+                if (VersionUtil.isHigherThan("v1_16_R3")) {
+                    getDamage = PacketManager.getNewNMS("net.minecraft.world.item.ItemStack").getMethod("getDamage");
+                    damage = null;
+                } else {
+                    getDamage = PacketManager.getNMS("ItemStack").getMethod("getDamage");
+                    damage = null;
+                }
             } else {
                 damage = PacketManager.getNMS("ItemStack").getDeclaredField("damage");
                 damage.setAccessible(true);
                 getDamage = null;
             }
 
-            item = PacketManager.getNMS("ItemStack").getDeclaredField("item");
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                item = PacketManager.getNewNMS("net.minecraft.world.item.ItemStack").getDeclaredField("v");
+            } else {
+                item = PacketManager.getNMS("ItemStack").getDeclaredField("item");
+            }
             item.setAccessible(true);
 
-            getName = PacketManager.getNMS("Item").getMethod("getName");
 
-            packetPlayOutEntityMetadata = PacketManager.getNMS("PacketPlayOutEntityMetadata");
-            packetPlayOutMap = PacketManager.getNMS("PacketPlayOutMap");
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                getName = PacketManager.getNewNMS("net.minecraft.world.item.Item").getMethod("getName");
+            } else {
+                getName = PacketManager.getNMS("Item").getMethod("getName");
+            }
+
+            if (VersionUtil.isHigherThan("v1_16_R3")) {
+                packetPlayOutEntityMetadata = PacketManager.getNewNMS("net.minecraft.network.protocol.game.PacketPlayOutEntityMetadata");
+                packetPlayOutMap = PacketManager.getNewNMS("net.minecraft.network.protocol.game.PacketPlayOutMap");
+            } else {
+                packetPlayOutEntityMetadata = PacketManager.getNMS("PacketPlayOutEntityMetadata");
+                packetPlayOutMap = PacketManager.getNMS("PacketPlayOutMap");
+            }
 
             packetPlayOutMapId = packetPlayOutMap.getDeclaredField("a");
             packetPlayOutMapId.setAccessible(true);

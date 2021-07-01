@@ -35,7 +35,7 @@ public class Mapping {
 
             if (VersionUtil.isHigherThan("v1_16_R3")) {
                 dimensionManager = PacketManager.getNewNMS("net.minecraft.world.level.dimension.DimensionManager").getField("k").get(null);
-                mapField = PacketManager.getNewNMS("net.minecraft.world.level.saveddata.maps.WorldMap").getField("mapView");
+                mapField = PacketManager.getNewNMS("net.minecraft.world.level.saveddata.maps.WorldMap").getField("e");
             } else if (VersionUtil.isHigherThan("v1_13_R2")) {
                 dimensionManager = PacketManager.getNMS("DimensionManager").getField("OVERWORLD").get(null);
                 mapField = PacketManager.getNMS("WorldMap").getField("map");
@@ -112,7 +112,7 @@ public class Mapping {
                 worldMap = worldMapConstructor.newInstance(name);
             }
 
-            if (VersionUtil.isHigherThan("v1_13_R2") && !VersionUtil.isHigherThan("v1_16_R3")) {
+            if (VersionUtil.isHigherThan("v1_13_R2")) {
                 mapField.set(worldMap, dimensionManager);
             }
 

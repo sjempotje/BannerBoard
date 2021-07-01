@@ -61,15 +61,6 @@ public class BannerBoardPlugin extends JavaPlugin {
     public SkinCache skinCache;
     private boolean loaded = false;
 
-    {
-        instance = this;
-        BannerBoardManager.setAPI(this.publicApi);
-    }
-
-    {
-        fixCorrupt();
-    }
-
     public static BannerBoardPlugin getInstance() {
         return instance;
     }
@@ -86,6 +77,14 @@ public class BannerBoardPlugin extends JavaPlugin {
             }
         }
         folder.delete();
+    }
+
+    @Override
+    public void onLoad() {
+        instance = this;
+        BannerBoardManager.setAPI(this.publicApi);
+
+        fixCorrupt();
     }
 
     // we're using dark_aqua &D and yellow &Y
@@ -200,6 +199,8 @@ public class BannerBoardPlugin extends JavaPlugin {
 
     public void enable() throws IOException {
         try {
+
+            rendererManager.loadDefaults();
 
             if (this.getConfig().contains("idrange.min") && this.getConfig().contains("idrange.max")) {
                 // fix to new format

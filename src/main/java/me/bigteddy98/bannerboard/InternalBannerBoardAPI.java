@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
 
 public class InternalBannerBoardAPI implements BannerBoardAPI {
 
-    private static Pattern notAllowed = Pattern.compile("[^a-z0-9_ ]", Pattern.CASE_INSENSITIVE);
+    private static final Pattern notAllowed = Pattern.compile("[^a-z0-9_ ]", Pattern.CASE_INSENSITIVE);
 
     // some static methods
     private static void check() {

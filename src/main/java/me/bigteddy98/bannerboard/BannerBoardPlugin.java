@@ -61,6 +61,8 @@ public class BannerBoardPlugin extends JavaPlugin {
     public SkinCache skinCache;
     private boolean loaded = false;
 
+    public static boolean firstJoin = true;
+
     public static BannerBoardPlugin getInstance() {
         return instance;
     }
@@ -160,19 +162,17 @@ public class BannerBoardPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        {
-            // org.bukkit.craftbukkit.v1_9_R1
-            // 0 1 2 3
-            String version = VersionUtil.getSpigotVersion();
-            if (!VersionUtil.SUPPORTED_VERSIONS.contains(version)) {
-                this.setEnabled(false);
-                new RuntimeException("BannerBoard does not support NMS version " + version
-                        + ". If this is a newer NMS version (latest supported version is "
-                        + VersionUtil.SUPPORTED_VERSIONS.get(VersionUtil.SUPPORTED_VERSIONS.size() - 1)
-                        + ") please contact the author as soon as possible and ask for an update. BannerBoard does not support any version older than 1.8")
-                        .printStackTrace();
-                return;
-            }
+        // org.bukkit.craftbukkit.v1_9_R1
+        // 0 1 2 3
+        String version = VersionUtil.getSpigotVersion();
+        if (!VersionUtil.SUPPORTED_VERSIONS.contains(version)) {
+            this.setEnabled(false);
+            new RuntimeException("BannerBoard does not support NMS version " + version
+                    + ". If this is a newer NMS version (latest supported version is "
+                    + VersionUtil.SUPPORTED_VERSIONS.get(VersionUtil.SUPPORTED_VERSIONS.size() - 1)
+                    + ") please contact the author as soon as possible and ask for an update. BannerBoard does not support any version older than 1.8")
+                    .printStackTrace();
+            return;
         }
 
         new BukkitRunnable() {

@@ -51,6 +51,13 @@ public class BoardMemory implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(final PlayerJoinEvent event) {
         join(event);
+
+        Bukkit.getScheduler().runTaskLater(BannerBoardPlugin.getInstance(), () -> {
+            if (BannerBoardPlugin.firstJoin) {
+                BannerBoardPlugin.getInstance().reload();
+                BannerBoardPlugin.firstJoin = false;
+            }
+        }, 30L);
     }
 
     public void join(final PlayerJoinEvent event) {

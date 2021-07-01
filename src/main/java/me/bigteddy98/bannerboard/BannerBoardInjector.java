@@ -80,7 +80,6 @@ public class BannerBoardInjector extends ChannelDuplexHandler {
             }
 
 
-
             if (VersionUtil.isHigherThan("v1_13_R1")) {
                 if (VersionUtil.isHigherThan("v1_16_R3")) {
                     getDamage = PacketManager.getNewNMS("net.minecraft.world.item.ItemStack").getMethod("getDamage");

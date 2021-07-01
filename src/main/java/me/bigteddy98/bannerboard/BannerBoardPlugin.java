@@ -79,14 +79,6 @@ public class BannerBoardPlugin extends JavaPlugin {
         folder.delete();
     }
 
-    @Override
-    public void onLoad() {
-        instance = this;
-        BannerBoardManager.setAPI(this.publicApi);
-
-        fixCorrupt();
-    }
-
     // we're using dark_aqua &D and yellow &Y
     public static void msg(CommandSender p, String message) {
         p.sendMessage(
@@ -109,6 +101,9 @@ public class BannerBoardPlugin extends JavaPlugin {
         instance = null;
         BannerBoardManager.setAPI(null);
 
+        this.placeHolderManager.clear();
+        this.rendererManager.clear();
+
         for (Player p : this.getServer().getOnlinePlayers()) {
             try {
                 final Channel playerChannel = PacketManager.getChannel(p);
@@ -125,14 +120,10 @@ public class BannerBoardPlugin extends JavaPlugin {
     }
 
     public void uninject(final Channel c) {
-        c.eventLoop().execute(new Runnable() {
-
-            @Override
-            public void run() {
-                final ChannelPipeline p = c.pipeline();
-                if (p.get("BannerBoard_hook") != null) {
-                    p.remove("BannerBoard_hook");
-                }
+        c.eventLoop().execute(() -> {
+            final ChannelPipeline p = c.pipeline();
+            if (p.get("BannerBoard_hook") != null) {
+                p.remove("BannerBoard_hook");
             }
         });
     }
@@ -200,6 +191,12 @@ public class BannerBoardPlugin extends JavaPlugin {
     public void enable() throws IOException {
         try {
 
+            instance = this;
+            BannerBoardManager.setAPI(this.publicApi);
+
+            fixCorrupt();
+
+            placeHolderManager.loadDefaults();
             rendererManager.loadDefaults();
 
             if (this.getConfig().contains("idrange.min") && this.getConfig().contains("idrange.max")) {

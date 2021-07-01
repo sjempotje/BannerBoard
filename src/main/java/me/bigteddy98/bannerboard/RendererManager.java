@@ -17,11 +17,7 @@ import java.util.Map;
 public class RendererManager {
 
     // little thread safety fix here
-    private final CaseInsensitiveMap<CustomRenderer> registeredRenderers = new CaseInsensitiveMap<CustomRenderer>();
-
-    public RendererManager() {
-
-    }
+    private final CaseInsensitiveMap<CustomRenderer> registeredRenderers = new CaseInsensitiveMap<>();
 
     public void loadDefaults() {
         this.registerRenderer("color", new CustomRenderer(BannerBoardPlugin.getInstance(), false, ColorRenderer.class));
@@ -31,6 +27,10 @@ public class RendererManager {
         this.registerRenderer("liveimg", new CustomRenderer(BannerBoardPlugin.getInstance(), false, LiveImageRenderer.class));
         this.registerRenderer("urlimg", new CustomRenderer(BannerBoardPlugin.getInstance(), false, URLImageRenderer.class));
         this.registerRenderer("interact", new CustomRenderer(BannerBoardPlugin.getInstance(), false, ClickableRenderer.class));
+    }
+
+    public void clear() {
+        this.registeredRenderers.clear();
     }
 
     public void registerRenderer(String name, CustomRenderer customRenderer) {

@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class BannerBoard {
     }
 
     public List<ItemFrame> buildItemFrameList() {
-        List<ItemFrame> frames = new ArrayList<>();
+        final List<ItemFrame> frames = new ArrayList<>();
         locationLoop:
         for (Location loc : this.locationList) {
             for (Entity e : loc.getChunk().getEntities()) {
@@ -242,7 +243,7 @@ public class BannerBoard {
         // make sure we have enough IDs
         for (int slide = 0; slide < slides; slide++) {
             if (slide >= this.frameIds.size()) {
-                this.frameIds.add(new ArrayList<Short>());
+                this.frameIds.add(new ArrayList<>());
             }
             List<ItemFrame> frameList = this.buildItemFrameList();
             for (int frame = 0; frame < frameList.size(); frame++) {

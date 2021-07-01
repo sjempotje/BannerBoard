@@ -1,7 +1,6 @@
 package me.bigteddy98.bannerboard;
 
 import me.bigteddy98.bannerboard.util.VersionUtil;
-import net.minecraft.world.item.Items;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Constructor;

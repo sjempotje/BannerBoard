@@ -13,7 +13,7 @@ public class PlaceHolderManager {
     // little thread safety fix here
     private final Map<String, PlaceHolder> registeredPlaceHolders = new HashMap<>();
 
-    public PlaceHolderManager() {
+    public void loadDefaults() {
         // register inbuilt placeholders
         this.registerPlaceHolder("name", new PlaceHolder(BannerBoardPlugin.getInstance()) {
 
@@ -31,6 +31,10 @@ public class PlaceHolderManager {
         });
     }
 
+    public void clear() {
+        registeredPlaceHolders.clear();
+    }
+
     public void registerPlaceHolder(String name, PlaceHolder p) {
         synchronized (this.registeredPlaceHolders) {
             if (this.registeredPlaceHolders.containsKey(name)) {
@@ -38,11 +42,11 @@ public class PlaceHolderManager {
                 String doubler = p.getPlugin().getName();
                 Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[BannerBoard] [WARN] PlaceHolder %" + name + "% is already reserved for plugin " + owner + ", so it failed to register for plugin " + doubler + ". You can still use the %" + name + "% placeholder from " + doubler + " by using %" + doubler + ":" + name + "% instead.");
             } else {
-               // Bukkit.getConsoleSender().sendMessage("[BannerBoard] [INFO] Successfully registered BannerBoard placeholder %" + name + "% for plugin " + p.getPlugin().getName() + "...");
+                Bukkit.getConsoleSender().sendMessage("[BannerBoard] [INFO] Successfully registered BannerBoard placeholder %" + name + "% for plugin " + p.getPlugin().getName() + "...");
                 this.registeredPlaceHolders.put(name, p);
             }
-           // this.registeredPlaceHolders.put(p.getPlugin().getName() + ":" + name, p);
-           // Bukkit.getConsoleSender().sendMessage("[BannerBoard] [INFO] Successfully registered BannerBoard placeholder %" + (p.getPlugin().getName() + ":" + name) + "% for plugin " + p.getPlugin().getName() + "...");
+            this.registeredPlaceHolders.put(p.getPlugin().getName() + ":" + name, p);
+            Bukkit.getConsoleSender().sendMessage("[BannerBoard] [INFO] Successfully registered BannerBoard placeholder %" + (p.getPlugin().getName() + ":" + name) + "% for plugin " + p.getPlugin().getName() + "...");
         }
     }
 

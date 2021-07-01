@@ -12,10 +12,10 @@ import java.lang.reflect.Method;
 
 public class FrameManager {
 
-    private static Constructor<?> CREATE_FRAME;
-    private static Constructor<?> BLOCK_POSITION;
     private static final Method ADD_ENTITY;
     private static final Field FIELD_NMS_WORLD;
+    private static Constructor<?> CREATE_FRAME;
+    private static Constructor<?> BLOCK_POSITION;
     private static Class<?> ENUM_DIRECTION;
 
     static {

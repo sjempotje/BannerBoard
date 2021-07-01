@@ -92,7 +92,9 @@ public class BannerBoard {
                     continue locationLoop;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[WARNING] [BannerBoard] Itemframe missing at " + loc + ". Please restore the missing itemframe and restart your server to prevent errors.");
+            if (!BannerBoardPlugin.firstJoin) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[WARNING] [BannerBoard] Itemframe missing at " + loc + ". Please restore the missing itemframe and restart your server to prevent errors.");
+            }
         }
         return frames;
     }

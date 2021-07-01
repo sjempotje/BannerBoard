@@ -95,8 +95,14 @@ public class BoardMemory implements Listener {
                             throw new IndexOutOfBoundsException("Itemframe missing for banner with ID " + board.getId() + ", remove the banner from your config or place the itemframe back.");
                         }
                         for (int i1 = 0; i1 < data.length; i1++) {
-                            short id = board.getMapIds(slide).get(i1);
-                            inject.addFrame(id, data[i1]);
+                            try {
+                                short id = board.getMapIds(slide).get(i1);
+                                inject.addFrame(id, data[i1]);
+                            } catch (IndexOutOfBoundsException ex) {
+                                if (!BannerBoardPlugin.firstJoin) {
+                                    ex.printStackTrace();
+                                }
+                            }
                         }
                     });
                 }

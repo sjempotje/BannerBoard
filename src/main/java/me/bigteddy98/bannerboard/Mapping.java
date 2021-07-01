@@ -3,7 +3,6 @@ package me.bigteddy98.bannerboard;
 import me.bigteddy98.bannerboard.util.VersionUtil;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldServer;
-import net.minecraft.world.level.saveddata.PersistentBase;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -110,7 +109,7 @@ public class Mapping {
             if (VersionUtil.isHigherThan("v1_16_R3")) {
                 worldMap = worldMapMethod.invoke(null, (byte) 4, false, WorldServer.g);
             } else {
-               worldMap = worldMapConstructor.newInstance(name);
+                worldMap = worldMapConstructor.newInstance(name);
             }
 
             if (VersionUtil.isHigherThan("v1_13_R2") && !VersionUtil.isHigherThan("v1_16_R3")) {
@@ -121,11 +120,19 @@ public class Mapping {
 
                 // invoke getWorldPersistentData on WorldServer to obtain WorldPersistentData
                 final Object worldServer = getHandle.invoke(Bukkit.getServer().getWorlds().get(0));
-                final WorldServer server = (WorldServer) worldServer;
 
-                @SuppressWarnings("unchecked") final Map<String, PersistentBase> map = server.getChunkProvider().getWorldPersistentData().b;
-
-                map.put(name, (PersistentBase) worldMap);
+                if (VersionUtil.isHigherThan("v1_16_R3")) {
+                    final Object chunkProviderServer = getWorldPersistentData.invoke(worldServer);
+                    final Method persist = chunkProviderServer.getClass().getMethod("getWorldPersistentData");
+                    final Object persistClass = persist.invoke(chunkProviderServer);
+                    final Field persistData = persistClass.getClass().getField("b");
+                    @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) persistData.get(persistClass);
+                    map.put(name, worldMap);
+                } else {
+                    final Object worldPersistentData = getWorldPersistentData.invoke(worldServer);
+                    @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) dataMapField.get(worldPersistentData);
+                    map.put(name, worldMap);
+                }
 
 				/*
 				// create file so that this method actually registers
@@ -148,7 +155,7 @@ public class Mapping {
                 }
             }
             return worldMap;
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
     }

@@ -12,7 +12,7 @@ public class SkinData {
 
     private final UUID uuid;
     private final String playerName;
-    private final Map<SkinType, BufferedImage> cachedImages = Collections.synchronizedMap(new HashMap<SkinType, BufferedImage>());
+    private final Map<SkinType, BufferedImage> cachedImages = Collections.synchronizedMap(new HashMap<>());
 
     public SkinData(UUID uuid, String playerName) {
         this.uuid = uuid;

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class VersionUtil {
 
-    public static final List<String> SUPPORTED_VERSIONS = new ArrayList<String>() {
+    public static final List<String> SUPPORTED_VERSIONS = new ArrayList<>() {
 
         private static final long serialVersionUID = -3393009554143811830L;
 

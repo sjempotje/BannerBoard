@@ -137,21 +137,19 @@ public class BoardManager implements Listener {
                     // EXAMPLE BUILD FACING NORTH and is in two different X
                     // columns
 
-                    boolean northSouth = false;
+                    boolean northSouth = loc1.getBlockX() != loc2.getBlockX();
                     // check in what direction the bannerboard was build
-                    if (loc1.getBlockX() != loc2.getBlockX()) {
-                        // it was build in the X direction
-                        northSouth = true;
-                    } // else eastWest
+                    // it was build in the X direction
+                    // else eastWest
 
                     final List<BlockFace> faces = new ArrayList<>();
                     if (loc1.getBlockX() == loc2.getBlockX() && loc1.getBlockZ() == loc2.getBlockZ()) {
-                        faces.addAll(Arrays.asList(new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST}));
+                        faces.addAll(Arrays.asList(BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST));
                     } else {
                         if (northSouth) {
-                            faces.addAll(Arrays.asList(new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH}));
+                            faces.addAll(Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH));
                         } else { // else eastWest
-                            faces.addAll(Arrays.asList(new BlockFace[]{BlockFace.EAST, BlockFace.WEST}));
+                            faces.addAll(Arrays.asList(BlockFace.EAST, BlockFace.WEST));
                         }
                     }
 

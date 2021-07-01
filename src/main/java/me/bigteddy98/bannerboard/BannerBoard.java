@@ -91,7 +91,7 @@ public class BannerBoard {
                     continue locationLoop;
                 }
             }
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[WARNING] [BannerBoard] Itemframe missing at " + loc.toString() + ". Please restore the missing itemframe and restart your server to prevent errors.");
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[WARNING] [BannerBoard] Itemframe missing at " + loc + ". Please restore the missing itemframe and restart your server to prevent errors.");
         }
         return frames;
     }
@@ -132,7 +132,7 @@ public class BannerBoard {
     public void addTopRenderer(int slide, BannerBoardRenderer<?> renderer) {
         synchronized (this.internalRenderers) {
             if (this.internalRenderers.size() <= slide) {
-                this.internalRenderers.add(new ArrayList<BannerBoardRenderer<?>>());
+                this.internalRenderers.add(new ArrayList<>());
             }
             this.internalRenderers.get(slide).add(renderer);
         }

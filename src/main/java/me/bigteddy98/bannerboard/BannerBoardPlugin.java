@@ -341,17 +341,13 @@ public class BannerBoardPlugin extends JavaPlugin {
         this.skinCache = new SkinCache(this.getConfig().getString("skinserver"));
 
         // load all boards AFTER all plugins have enabled
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            BannerBoardPlugin.this.configurationManager.loadAll();
 
-            @Override
-            public void run() {
-                BannerBoardPlugin.this.configurationManager.loadAll();
-
-                // find all playerjoinevents
-                // currently only BoardMemory.onJoin
-                for (Player p : getServer().getOnlinePlayers()) {
-                    memoryManager.onJoin(new PlayerJoinEvent(p, "BannerBoard reload"));
-                }
+            // find all playerjoinevents
+            // currently only BoardMemory.onJoin
+            for (Player p : getServer().getOnlinePlayers()) {
+                memoryManager.onJoin(new PlayerJoinEvent(p, "BannerBoard reload"));
             }
         });
 

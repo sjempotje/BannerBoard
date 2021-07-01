@@ -2,8 +2,8 @@ package me.bigteddy98.bannerboard;
 
 import me.bigteddy98.bannerboard.util.VersionUtil;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ChunkProviderServer;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.level.saveddata.PersistentBase;
 import org.bukkit.Bukkit;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Mapping {
 
-    private static Method getHandle;
+    private static final Method getHandle;
     private static Field worldMaps;
     private static Field mapField;
     private static Object dimensionManager;
@@ -121,12 +121,11 @@ public class Mapping {
 
                 // invoke getWorldPersistentData on WorldServer to obtain WorldPersistentData
                 final Object worldServer = getHandle.invoke(Bukkit.getServer().getWorlds().get(0));
-                final Object worldPersistentData = getWorldPersistentData.invoke(worldServer);
-                //final Object actualData = dataMapField.get("i");
+                final WorldServer server = (WorldServer) worldServer;
 
-                //@SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) actualData;
+                @SuppressWarnings("unchecked") final Map<String, PersistentBase> map = server.getChunkProvider().getWorldPersistentData().b;
 
-                //map.put(name, worldMap);
+                map.put(name, (PersistentBase) worldMap);
 
 				/*
 				// create file so that this method actually registers

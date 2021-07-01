@@ -80,20 +80,16 @@ public class BoardMemory implements Listener {
                     for (Short bl : board.getMapIds(slide)) {
                         inject.addMapId(bl);
                     }
-                    plugin.executorManager.render(slide, event.getPlayer(), plugin, board, new RenderCallback() {
-
-                        @Override
-                        public void finished(byte[][] data) {
-                            if (!event.getPlayer().isOnline()) {
-                                return;
-                            }
-                            if (data.length != board.buildItemFrameList().size()) {
-                                throw new IndexOutOfBoundsException("Itemframe missing for banner with ID " + board.getId() + ", remove the banner from your config or place the itemframe back.");
-                            }
-                            for (int i = 0; i < data.length; i++) {
-                                short id = board.getMapIds(slide).get(i);
-                                inject.addFrame(id, data[i]);
-                            }
+                    plugin.executorManager.render(slide, event.getPlayer(), plugin, board, data -> {
+                        if (!event.getPlayer().isOnline()) {
+                            return;
+                        }
+                        if (data.length != board.buildItemFrameList().size()) {
+                            throw new IndexOutOfBoundsException("Itemframe missing for banner with ID " + board.getId() + ", remove the banner from your config or place the itemframe back.");
+                        }
+                        for (int i1 = 0; i1 < data.length; i1++) {
+                            short id = board.getMapIds(slide).get(i1);
+                            inject.addFrame(id, data[i1]);
                         }
                     });
                 }

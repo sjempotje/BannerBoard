@@ -41,7 +41,7 @@ public class BannerBoardInjector extends ChannelDuplexHandler {
             if (VERSION.startsWith("v1_9_") || VersionUtil.isHigherThan("v1_10_R1")) {
                 // 1.9 related
                 if (VersionUtil.isHigherThan("v1_16_R3")) {
-                    itemList_19 = PacketManager.getNewNMS("net.minecraft.network.syncher.DataWatcher").getDeclaredField("f");
+                    itemList_19 = PacketManager.getNewNMS("net.minecraft.network.syncher.DataWatcher").getDeclaredField("b");
                     itemList_19.setAccessible(true);
                 } else {
                     itemList_19 = PacketManager.getNMS("DataWatcher$Item").getDeclaredField("b");

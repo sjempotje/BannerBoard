@@ -8,21 +8,9 @@ import java.util.zip.Inflater;
 
 public class Compressor {
 
-    private static final ThreadLocal<Deflater> TL_COMPRESSOR = ThreadLocal.withInitial(new Supplier<Deflater>() {
+    private static final ThreadLocal<Deflater> TL_COMPRESSOR = ThreadLocal.withInitial(() -> new Deflater(9));
 
-        @Override
-        public Deflater get() {
-            return new Deflater(9);
-        }
-    });
-
-    private static final ThreadLocal<Inflater> TL_DECOMPRESSOR = ThreadLocal.withInitial(new Supplier<Inflater>() {
-
-        @Override
-        public Inflater get() {
-            return new Inflater();
-        }
-    });
+    private static final ThreadLocal<Inflater> TL_DECOMPRESSOR = ThreadLocal.withInitial(Inflater::new);
 
     public static byte[] compress(byte[] given) {
         Deflater compressor = TL_COMPRESSOR.get();

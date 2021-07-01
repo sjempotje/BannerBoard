@@ -1,10 +1,8 @@
 package me.bigteddy98.bannerboard.util.colors;
 
-import me.bigteddy98.bannerboard.BannerBoardPlugin;
-
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ColorManager {
@@ -14,7 +12,7 @@ public class ColorManager {
     public ColorManager(String useFile) {
         System.out.println("[INFO] [BannerBoard] Loading color cache table " + useFile + "...");
         byte[] decompressed;
-        try (DataInputStream in = new DataInputStream(new FileInputStream(BannerBoardPlugin.getInstance().getDataFolder() + "/colors/" + useFile))) {
+        try (DataInputStream in = new DataInputStream(new BufferedInputStream(getClass().getClassLoader().getResourceAsStream("colors/" + useFile)))) {
             final int size = in.readInt();
             final byte[] compressed = new byte[size];
             in.read(compressed);

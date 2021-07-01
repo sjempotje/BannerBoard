@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id "com.github.johnrengelman.shadow" version "7.0.0"
 }
@@ -29,5 +31,7 @@ shadowJar {
 }
 
 processResources {
-    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: version]
+    filesMatching('plugin.yml') {
+        filter ReplaceTokens, tokens: [version: version]
+    }
 }

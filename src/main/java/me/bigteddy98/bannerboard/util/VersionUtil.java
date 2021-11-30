@@ -29,6 +29,8 @@ public class VersionUtil {
             this.add("v1_16_R3");
 
             this.add("v1_17_R1");
+            this.add("v1_18_R1");
+            
         }
     };
 

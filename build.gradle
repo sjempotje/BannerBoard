@@ -15,6 +15,8 @@ allprojects {
         maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
         maven { url = "https://mvn.intellectualsites.com/content/repositories/thirdparty/" }
         maven { url = "https://repo.glaremasters.me/repository/public/" }
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+        mavenLocal()
     }
 }
 

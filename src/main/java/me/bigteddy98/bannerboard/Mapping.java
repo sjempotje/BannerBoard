@@ -34,7 +34,10 @@ public class Mapping {
             getHandle = PacketManager.getCraft("CraftWorld").getMethod("getHandle"); // gives us WorldServer
 
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                dimensionManager = PacketManager.getNewNMS("net.minecraft.world.level.dimension.DimensionManager").getField("k").get(null);
+                String fieldName = VersionUtil.isHigherThan("v1_18_R1") ? "p" : "k";
+                Field curField = PacketManager.getNewNMS("net.minecraft.world.level.dimension.DimensionManager").getDeclaredField(fieldName);
+                curField.setAccessible(true);
+                dimensionManager = curField.get(null);
                 mapField = PacketManager.getNewNMS("net.minecraft.world.level.saveddata.maps.WorldMap").getField("e");
             } else if (VersionUtil.isHigherThan("v1_13_R2")) {
                 dimensionManager = PacketManager.getNMS("DimensionManager").getField("OVERWORLD").get(null);
@@ -42,7 +45,8 @@ public class Mapping {
             }
 
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                getWorldPersistentData = PacketManager.getNewNMS("net.minecraft.server.level.WorldServer").getMethod("getChunkProvider");
+                String getChunkProviderMethodName = VersionUtil.isHigherThan("v1_18_R1") ? "u" : "getChunkProvider";
+                getWorldPersistentData = PacketManager.getNewNMS("net.minecraft.server.level.WorldServer").getMethod(getChunkProviderMethodName);
                 final Field field = PacketManager.getNewNMS("net.minecraft.server.level.ChunkProviderServer").getDeclaredField("i");
                 field.setAccessible(true);
                 dataMapField = field;
@@ -112,7 +116,7 @@ public class Mapping {
                 worldMap = worldMapConstructor.newInstance(name);
             }
 
-            if (VersionUtil.isHigherThan("v1_13_R2")) {
+            if (VersionUtil.isHigherThan("v1_13_R2") && !VersionUtil.isHigherThan("v1_18_R1")) {
                 mapField.set(worldMap, dimensionManager);
             }
 
@@ -121,7 +125,12 @@ public class Mapping {
                 // invoke getWorldPersistentData on WorldServer to obtain WorldPersistentData
                 final Object worldServer = getHandle.invoke(Bukkit.getServer().getWorlds().get(0));
 
-                if (VersionUtil.isHigherThan("v1_16_R3")) {
+                if (VersionUtil.isHigherThan("v1_18_R1")) {
+                    final Object chunkProviderServer = getWorldPersistentData.invoke(worldServer);
+                    final Field persistData = chunkProviderServer.getClass().getField("b");
+                    @SuppressWarnings("unchecked") final Map<String, Object> map = (Map<String, Object>) persistData.get(chunkProviderServer);
+                    map.put(name, worldMap);
+                } else if (VersionUtil.isHigherThan("v1_16_R3")) {
                     final Object chunkProviderServer = getWorldPersistentData.invoke(worldServer);
                     final Method persist = chunkProviderServer.getClass().getMethod("getWorldPersistentData");
                     final Object persistClass = persist.invoke(chunkProviderServer);

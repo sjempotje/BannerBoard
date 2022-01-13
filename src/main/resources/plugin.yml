@@ -1,6 +1,6 @@
 name: BannerBoard
 main: me.bigteddy98.bannerboard.BannerBoardPlugin
-version: 1.12.0
+version: 1.12.1
 api-version: 1.18
 author: BigTeddy98
 commands:

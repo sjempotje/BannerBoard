@@ -107,7 +107,11 @@ public class BannerBoardInjector extends ChannelDuplexHandler {
 
 
             if (VersionUtil.isHigherThan("v1_16_R3")) {
-                getName = PacketManager.getNewNMS("net.minecraft.world.item.Item").getMethod("getName");
+                if (VersionUtil.isHigherThan("v1_18_R1")) {
+                    getName = PacketManager.getNewNMS("net.minecraft.world.item.Item").getMethod("a");
+                } else {
+                    getName = PacketManager.getNewNMS("net.minecraft.world.item.Item").getMethod("getName");
+                }
             } else {
                 getName = PacketManager.getNMS("Item").getMethod("getName");
             }

@@ -32,7 +32,12 @@ public class FrameManager {
                 entity = PacketManager.getNMS("Entity");
             }
 
-            ADD_ENTITY = craftWorld.getDeclaredMethod("addEntity", entity, CreatureSpawnEvent.SpawnReason.class, Class.forName("org.bukkit.util.Consumer"));
+            if (VersionUtil.isHigherThan("v1_18_R1")) {
+                final Class<?> craftRegionAccessor = PacketManager.getCraft("CraftRegionAccessor");
+                ADD_ENTITY = craftRegionAccessor.getDeclaredMethod("addEntity", entity, CreatureSpawnEvent.SpawnReason.class, Class.forName("org.bukkit.util.Consumer"), boolean.class);
+            } else {
+                ADD_ENTITY = craftWorld.getDeclaredMethod("addEntity", entity, CreatureSpawnEvent.SpawnReason.class, Class.forName("org.bukkit.util.Consumer"));
+            }
 
             final Class<?> world;
 
@@ -103,7 +108,11 @@ public class FrameManager {
         final Object nmsWorld = FIELD_NMS_WORLD.get(loc.getWorld());
         final Object pos = BLOCK_POSITION.newInstance(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         final Object frame = CREATE_FRAME.newInstance(nmsWorld, pos, Enum.valueOf((Class<? extends Enum>) ENUM_DIRECTION, hasWall.name()));
-        ADD_ENTITY.invoke(loc.getWorld(), frame, CreatureSpawnEvent.SpawnReason.CUSTOM, null);
+        if (VersionUtil.isHigherThan("v1_18_R1")) {
+            ADD_ENTITY.invoke(loc.getWorld(), frame, CreatureSpawnEvent.SpawnReason.CUSTOM, null, true);
+        } else {
+            ADD_ENTITY.invoke(loc.getWorld(), frame, CreatureSpawnEvent.SpawnReason.CUSTOM, null);
+        }
     }
 
 }

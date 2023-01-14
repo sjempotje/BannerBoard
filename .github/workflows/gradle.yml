@@ -35,7 +35,7 @@ jobs:
       with:
         arguments: build
     - name: step 2 - Add artifacts to publish to the temp folder
-      run: cd build && libs && ls
+      run: cd build/libs && ls
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:

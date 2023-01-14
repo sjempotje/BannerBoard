@@ -35,13 +35,10 @@ jobs:
       with:
         arguments: build
     - name: step 2 - Add artifacts to publish to the temp folder
-      run: |
-        ls
-        cd build
-        ls
+      run: cd build && libs && ls
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:
         name: my-artifact
-        path: BannerBoard.jar
+        path: build/libs/BannerBoard.jar
         retention-days: 5
